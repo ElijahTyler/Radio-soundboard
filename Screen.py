@@ -1,5 +1,4 @@
 import pygame
-import Button
 import os
 maindir = os.path.dirname(os.path.abspath(__file__))
 
