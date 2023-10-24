@@ -17,16 +17,27 @@ sfx_channel = pygame.mixer.Channel(1)
 
 def main():
     font_size = 40
-    screen = Screen(600, 800, None, (40,40,40))
-    pygame.display.set_caption('Radio soundboard')
-    b1 = Button('6AM Chime', font_size, chime_6am, (50, 50))
-    b2 = Button('Balloon Boy Hello/Hi', font_size, balloon_boy, (50, 130))
-    b3 = Button('Hallway Ambience', font_size, hallway_ambience, (50, 210))
-    b4 = Button('Main Menu', font_size, main_menu, (50, 290))
-    b5 = Button('Mascot Tune', font_size, mascot_tune, (50, 370))
-    b6 = Button('Music Box', font_size, music_box, (50, 450))
-    b7 = Button('Power Lost', font_size, power_lost, (50, 530))
-    b8 = Button('Security Ambience', font_size, security_ambience, (50, 610))
+    margin = 40
+    num_buttons = 8
+    
+    pts = []
+    for i in range(8):
+        pts.append((margin, margin + (i)*(font_size + margin)))
+    b1 = Button('6AM Chime', font_size, chime_6am, pts[0])
+    b2 = Button('Balloon Boy Hello/Hi', font_size, balloon_boy, pts[1])
+    b3 = Button('Hallway Ambience', font_size, hallway_ambience, pts[2])
+    b4 = Button('Main Menu', font_size, main_menu, pts[3])
+    b5 = Button('Mascot Tune', font_size, mascot_tune, pts[4])
+    b6 = Button('Music Box', font_size, music_box, pts[5])
+    b7 = Button('Power Lost', font_size, power_lost, pts[6])
+    b8 = Button('Security Ambience', font_size, security_ambience, pts[7])
+    max_width = 0
+    for b in [b1, b2, b3, b4, b5, b6, b7, b8]:
+        if b.rendered_text_rect.width > max_width:
+            max_width = b.rendered_text_rect.width
+
+    screen = Screen(max_width + (2 * margin), (font_size * num_buttons) + ( margin * (num_buttons + 1) ), None, (40,40,40))
+    
     screen.add_button(b1)
     screen.add_button(b2)
     screen.add_button(b3)
@@ -39,6 +50,9 @@ def main():
     last_button = None
 
     while True:
+        if not sfx_channel.get_busy():
+            pygame.display.set_caption('Radio soundboard')
+
         screen.draw()
         for b in screen.buttons:
             b.draw(screen.display)
@@ -48,10 +62,14 @@ def main():
             elif event.type == pygame.MOUSEBUTTONUP:
                 for button in screen.buttons:
                     if button.rect.collidepoint(event.pos):
-                        sfx_channel.stop()
-                        if button != last_button and not sfx_channel.get_busy():
+                        did_stop = False
+                        if sfx_channel.get_busy():
+                            sfx_channel.stop()
+                            did_stop = True
+                        if button != last_button or not did_stop:
                             sfx_channel.play(button.sound)
                             last_button = button
+                            pygame.display.set_caption('Now playing: ' + button.name)
 
         pygame.display.update()
 
