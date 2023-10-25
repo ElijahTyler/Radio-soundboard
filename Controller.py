@@ -54,8 +54,14 @@ def main():
             pygame.display.set_caption('Radio soundboard')
 
         screen.draw()
+
+        mouse = pygame.mouse.get_pos()
         for b in screen.buttons:
-            b.draw(screen.display)
+            if b.rect.collidepoint(mouse):
+                b.draw(screen.display, True)
+            else:
+                b.draw(screen.display)
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit()
