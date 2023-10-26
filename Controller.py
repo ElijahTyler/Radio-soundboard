@@ -20,6 +20,8 @@ def main():
     font_size = 40
     margin = 40
     num_buttons = 9
+    volume = 1.0
+    sfx_channel.set_volume(volume)
     
     pts = []
     for i in range(num_buttons):
@@ -53,8 +55,10 @@ def main():
     last_button = None
 
     while True:
-        if not sfx_channel.get_busy():
-            pygame.display.set_caption('Radio soundboard')
+        if sfx_channel.get_busy():
+            pygame.display.set_caption('Radio soundboard - Volume: ' + str(volume) + ' Now playing: ' + last_button.name)
+        else:
+            pygame.display.set_caption('Radio soundboard - Volume: ' + str(volume))
 
         screen.draw()
 
@@ -78,16 +82,22 @@ def main():
                         if button != last_button or not did_stop:
                             sfx_channel.play(button.sound)
                             last_button = button
-                            pygame.display.set_caption('Now playing: ' + button.name)
             # else if key pressed is a number 1-9, fade out that many seconds in the sfx_channel
             elif event.type == pygame.KEYDOWN:
                 if event.unicode.isdigit() and int(event.unicode) in range(1, 10):
                     sfx_channel.fadeout(int(event.unicode) * 1000)
                 elif event.key == pygame.K_0:
                     sfx_channel.fadeout(10000)
+                elif event.key == pygame.K_UP and volume < 1.5:
+                    volume += 0.05
+                    volume = round(volume, 2)
+                    sfx_channel.set_volume(volume)
+                elif event.key == pygame.K_DOWN and volume > 0.05:
+                    volume -= 0.05
+                    volume = round(volume, 2)
+                    sfx_channel.set_volume(volume)
 
         pygame.display.update()
-
 
 if __name__ == "__main__":
     main()
