@@ -68,7 +68,7 @@ def main():
                 b.draw(screen.display, True)
             else:
                 b.draw(screen.display)
-        
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit()
@@ -82,12 +82,14 @@ def main():
                         if button != last_button or not did_stop:
                             sfx_channel.play(button.sound)
                             last_button = button
-            # else if key pressed is a number 1-9, fade out that many seconds in the sfx_channel
+
             elif event.type == pygame.KEYDOWN:
+                # fade out timer
                 if event.unicode.isdigit() and int(event.unicode) in range(1, 10):
                     sfx_channel.fadeout(int(event.unicode) * 1000)
                 elif event.key == pygame.K_0:
                     sfx_channel.fadeout(10000)
+                # volume control
                 elif event.key == pygame.K_UP and volume < 1.5:
                     volume += 0.05
                     volume = round(volume, 2)
