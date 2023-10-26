@@ -13,15 +13,16 @@ mascot_tune = pygame.mixer.Sound(os.path.join(maindir, 'assets', 'sounds', 'masc
 music_box = pygame.mixer.Sound(os.path.join(maindir, 'assets', 'sounds', 'music_box.mp3'))
 power_lost = pygame.mixer.Sound(os.path.join(maindir, 'assets', 'sounds', 'power_lost.mp3'))
 security_ambience = pygame.mixer.Sound(os.path.join(maindir, 'assets', 'sounds', 'security_ambience.mp3'))
+animatronic_at_door = pygame.mixer.Sound(os.path.join(maindir, 'assets', 'sounds', 'animatronic_at_door.mp3'))
 sfx_channel = pygame.mixer.Channel(1)
 
 def main():
     font_size = 40
     margin = 40
-    num_buttons = 8
+    num_buttons = 9
     
     pts = []
-    for i in range(8):
+    for i in range(num_buttons):
         pts.append((margin, margin + (i)*(font_size + margin)))
     b1 = Button('6AM Chime', font_size, chime_6am, pts[0])
     b2 = Button('Balloon Boy Hello/Hi', font_size, balloon_boy, pts[1])
@@ -31,6 +32,7 @@ def main():
     b6 = Button('Music Box', font_size, music_box, pts[5])
     b7 = Button('Power Lost', font_size, power_lost, pts[6])
     b8 = Button('Security Ambience', font_size, security_ambience, pts[7])
+    b9 = Button('Animatronic at Door', font_size, animatronic_at_door, pts[8])
     max_width = 0
     for b in [b1, b2, b3, b4, b5, b6, b7, b8]:
         if b.rendered_text_rect.width > max_width:
@@ -46,6 +48,7 @@ def main():
     screen.add_button(b6)
     screen.add_button(b7)
     screen.add_button(b8)
+    screen.add_button(b9)
 
     last_button = None
 
@@ -76,6 +79,12 @@ def main():
                             sfx_channel.play(button.sound)
                             last_button = button
                             pygame.display.set_caption('Now playing: ' + button.name)
+            # else if key pressed is a number 1-9, fade out that many seconds in the sfx_channel
+            elif event.type == pygame.KEYDOWN:
+                if event.unicode.isdigit() and int(event.unicode) in range(1, 10):
+                    sfx_channel.fadeout(int(event.unicode) * 1000)
+                elif event.key == pygame.K_0:
+                    sfx_channel.fadeout(10000)
 
         pygame.display.update()
 

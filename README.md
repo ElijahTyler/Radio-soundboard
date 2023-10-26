@@ -10,4 +10,5 @@ A soundboard for my radio show, Five Nights at Eli's. If you'd like to listen in
 
 ## Usage
 
-literally just click the buttons lmao
+- literally just click the buttons lmao
+- number keys are fade-out timers, e.g. pressing 3 fades out the current sound in 3 seconds
