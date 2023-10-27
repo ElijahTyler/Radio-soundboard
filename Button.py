@@ -5,7 +5,7 @@ maindir = os.path.dirname(os.path.abspath(__file__))
 class Button:
     def __init__(self, name='Untitled', font_size=30, sound=None, pos=(0,0)):
         self.name = name
-        self.font = pygame.font.Font(os.path.join(maindir, 'assets', 'font', 'Consolas.ttf'), font_size)
+        self.font = pygame.font.Font(os.path.join(maindir, 'assets', 'Consolas.ttf'), font_size)
         self.sound = sound
         self.pos = pos
         self.rendered_text = self.font.render(self.name, True, (40, 40, 40))
